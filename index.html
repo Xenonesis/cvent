@@ -42,8 +42,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <link rel="icon" type="image/svg+xml" href="cvent-logo.svg">
+  <link rel="icon" type="image/svg+xml" href="assets/images/logos/cvent-logo.svg">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="pages/webinar-header.css">
   <title>cVent Webinar Invitation</title>
   <style>
     /* Base styles */
@@ -212,6 +213,31 @@
     }
 
     .mode-toggle:active {
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* Footer dark mode toggle */
+    .footer-mode-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 15px auto;
+      padding: 8px 12px;
+      border-radius: 30px;
+      background-color: var(--container-bg);
+      box-shadow: var(--shadow-sm);
+      transition: all var(--transition-speed) var(--transition-timing);
+      border: 1px solid var(--border-color);
+      max-width: fit-content;
+    }
+
+    .footer-mode-toggle:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .footer-mode-toggle:active {
       transform: translateY(-1px);
       box-shadow: var(--shadow-sm);
     }
@@ -446,12 +472,12 @@
       transition: transform 0.5s var(--transition-timing),
                  box-shadow 0.3s var(--transition-timing);
       will-change: transform;
-      animation: pulse 3s infinite ease-in-out;
+      animation: pulse 3s infinite var(--transition-smooth);
     }
 
     .header-image:hover {
       transform: scale(1.05) rotate(5deg);
-      box-shadow: var(--shadow-lg);
+      box-shadow: var(--shadow-lg), var(--shadow-glow);
     }
 
     .header-image img {
@@ -459,10 +485,28 @@
       height: 100%;
       object-fit: cover;
       transition: transform 0.5s var(--transition-timing);
+      position: relative;
+      z-index: 1;
     }
 
     .header-image:hover img {
       transform: scale(1.1);
+    }
+
+    .image-glow-effect {
+      position: absolute;
+      inset: -5px;
+      background: var(--gradient-primary);
+      opacity: 0;
+      z-index: 0;
+      border-radius: 50%;
+      filter: blur(10px);
+      transition: opacity 0.5s var(--transition-timing);
+      animation: glow 3s infinite var(--transition-smooth);
+    }
+
+    .header-image:hover .image-glow-effect {
+      opacity: 0.7;
     }
 
     .decorative-element {
@@ -471,8 +515,25 @@
       border-radius: 50%;
       z-index: 0;
       transition: transform 0.5s var(--transition-timing),
-                 border-color var(--transition-speed) var(--transition-timing);
+                 border-color var(--transition-speed) var(--transition-timing),
+                 box-shadow 0.5s var(--transition-timing),
+                 opacity 0.5s var(--transition-timing);
       will-change: transform;
+      opacity: 0.7;
+    }
+
+    .decorative-element::before {
+      content: '';
+      position: absolute;
+      inset: -4px;
+      border-radius: 50%;
+      background: radial-gradient(circle at center, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+      opacity: 0;
+      transition: opacity 0.5s var(--transition-timing);
+    }
+
+    .decorative-element:hover::before {
+      opacity: 0.8;
     }
 
     .decorative-element.top-right {
@@ -482,6 +543,8 @@
       top: -10px;
       border-color: var(--divider-color-1);
       animation: rotateClockwise 20s linear infinite;
+      background: radial-gradient(circle at center, rgba(77, 181, 255, 0.1) 0%, transparent 70%);
+      box-shadow: 0 0 10px rgba(77, 181, 255, 0.3);
     }
 
     .decorative-element.bottom-right {
@@ -491,38 +554,72 @@
       bottom: 0;
       border-color: var(--divider-color-3);
       animation: rotateCounterClockwise 15s linear infinite;
+      background: radial-gradient(circle at center, rgba(254, 180, 123, 0.1) 0%, transparent 70%);
+      box-shadow: 0 0 8px rgba(254, 180, 123, 0.3);
     }
 
+    /* Removed bottom-left circle
     .decorative-element.bottom-left {
       width: 25px;
       height: 25px;
       left: 20px;
       bottom: -10px;
       border-color: var(--divider-color-2);
-      animation: pulse 4s infinite ease-in-out;
+      animation: float 4s infinite var(--transition-smooth);
+      background: radial-gradient(circle at center, rgba(255, 126, 95, 0.1) 0%, transparent 70%);
+      box-shadow: 0 0 8px rgba(255, 126, 95, 0.3);
+    }
+    */
+
+    .decorative-element:hover {
+      transform: scale(1.2);
+      opacity: 1;
     }
 
     .header-divider {
-      height: 2px;
-      background: linear-gradient(to right, var(--divider-color-1), var(--divider-color-2), var(--divider-color-3));
+      height: 3px;
+      background: linear-gradient(to right,
+                 var(--divider-color-1),
+                 var(--divider-color-2),
+                 var(--divider-color-3),
+                 var(--divider-color-2),
+                 var(--divider-color-1));
       margin: 5px 0 15px 0;
       width: 100%;
       position: relative;
       overflow: hidden;
+      border-radius: 3px;
+      box-shadow: 0 0 8px rgba(77, 181, 255, 0.3);
+    }
+
+    .header-divider::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg,
+                 rgba(255,255,255,0.1) 0%,
+                 rgba(255,255,255,0.2) 50%,
+                 rgba(255,255,255,0.1) 100%);
+      filter: blur(1px);
     }
 
     .header-divider::after {
       content: '';
       position: absolute;
       top: 0;
-      left: -100%;
+      left: 0;
       width: 100%;
       height: 100%;
       background: linear-gradient(90deg,
                  rgba(255,255,255,0) 0%,
-                 rgba(255,255,255,0.5) 50%,
+                 rgba(255,255,255,0.6) 50%,
                  rgba(255,255,255,0) 100%);
-      animation: shimmer 3s infinite;
+      transform: translateX(-100%);
+      animation: shimmer 3s infinite var(--transition-smooth);
+      will-change: transform;
     }
 
     @media (max-width: var(--breakpoint-sm)) {
@@ -548,6 +645,8 @@
         right: 20%;
         bottom: 10px;
       }
+
+      /* Bottom-left circle has been removed */
     }
 
     /* Content styles */
@@ -895,67 +994,170 @@
       .footer-logo {
         width: 80px;
       }
+
+      .footer-mode-toggle {
+        padding: 6px 10px;
+      }
+
+      .toggle-switch {
+        width: 50px;
+        height: 26px;
+      }
+
+      .toggle-slider:before {
+        height: 18px;
+        width: 18px;
+      }
+
+      input:checked + .toggle-slider:before {
+        transform: translateX(24px);
+      }
     }
 
     /* Animations - Performance optimized with will-change and transform */
     @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
+      from {
+        opacity: 0;
+        will-change: opacity;
+      }
+      to {
+        opacity: 1;
+        will-change: opacity;
+      }
     }
 
     @keyframes slideIn {
       from {
         opacity: 0;
         transform: translateX(-20px);
+        will-change: transform, opacity;
       }
       to {
         opacity: 1;
         transform: translateX(0);
+        will-change: transform, opacity;
       }
     }
 
     @keyframes pulse {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.03); }
-      100% { transform: scale(1); }
+      0% {
+        transform: scale(1);
+        will-change: transform;
+      }
+      50% {
+        transform: scale(1.03);
+        will-change: transform;
+      }
+      100% {
+        transform: scale(1);
+        will-change: transform;
+      }
     }
 
     @keyframes togglePop {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.1); }
-      100% { transform: scale(1); }
+      0% {
+        transform: scale(1);
+        will-change: transform;
+      }
+      50% {
+        transform: scale(1.1);
+        will-change: transform;
+      }
+      100% {
+        transform: scale(1);
+        will-change: transform;
+      }
     }
 
     @keyframes toggleRotate {
-      0% { transform: rotate(0); }
-      100% { transform: rotate(360deg); }
+      0% {
+        transform: rotate(0);
+        will-change: transform;
+      }
+      100% {
+        transform: rotate(360deg);
+        will-change: transform;
+      }
     }
 
-    /* New animations */
+    /* New animations - optimized for performance */
     @keyframes shimmer {
-      0% { left: -100%; }
-      100% { left: 100%; }
+      0% {
+        transform: translateX(-100%);
+        will-change: transform;
+      }
+      100% {
+        transform: translateX(100%);
+        will-change: transform;
+      }
     }
 
     @keyframes rotateClockwise {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
+      from {
+        transform: rotate(0deg);
+        will-change: transform;
+      }
+      to {
+        transform: rotate(360deg);
+        will-change: transform;
+      }
     }
 
     @keyframes rotateCounterClockwise {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(-360deg); }
+      from {
+        transform: rotate(0deg);
+        will-change: transform;
+      }
+      to {
+        transform: rotate(-360deg);
+        will-change: transform;
+      }
     }
 
     @keyframes float {
-      0% { transform: translateY(0); }
-      50% { transform: translateY(-10px); }
-      100% { transform: translateY(0); }
+      0% {
+        transform: translateY(0);
+        will-change: transform;
+      }
+      50% {
+        transform: translateY(-10px);
+        will-change: transform;
+      }
+      100% {
+        transform: translateY(0);
+        will-change: transform;
+      }
     }
 
     @keyframes scaleIn {
-      from { transform: scale(0.8); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
+      from {
+        transform: scale(0.8);
+        opacity: 0;
+        will-change: transform, opacity;
+      }
+      to {
+        transform: scale(1);
+        opacity: 1;
+        will-change: transform, opacity;
+      }
+    }
+
+    @keyframes glow {
+      0% {
+        opacity: 0.3;
+        filter: blur(10px);
+        will-change: opacity, filter;
+      }
+      50% {
+        opacity: 0.5;
+        filter: blur(15px);
+        will-change: opacity, filter;
+      }
+      100% {
+        opacity: 0.3;
+        filter: blur(10px);
+        will-change: opacity, filter;
+      }
     }
 
     /* Intersection Observer Animation Classes */
@@ -983,16 +1185,6 @@
 </head>
 <body>
   <div class="container">
-    <!-- Dark Mode Toggle -->
-    <div class="mode-toggle" role="region" aria-label="Theme Preferences">
-      <span class="toggle-label">Theme</span>
-      <label class="toggle-switch" for="darkModeToggle">
-        <input type="checkbox" id="darkModeToggle" aria-label="Toggle between light and dark mode">
-        <span class="toggle-slider"></span>
-        <span class="toggle-moon"></span>
-      </label>
-    </div>
-
     <!-- Header -->
     <div class="header">
       <div class="webinar-label">WEBINAR</div>
@@ -1006,9 +1198,10 @@
         <div class="decorative-element top-right"></div>
         <div class="decorative-element bottom-right"></div>
 
-        <!-- Header image -->
+        <!-- Header image with enhanced animations -->
         <div class="header-image">
-          <img src="header_logo_stroke.png" alt="Webinar Image">
+          <div class="image-glow-effect"></div>
+          <img src="assets/images/logos/header_logo_stroke.png" alt="Webinar Image">
         </div>
       </div>
     </div>
@@ -1035,16 +1228,27 @@
     <!-- Footer -->
     <div class="footer">
       <div class="social-icons">
-        <a href="#"><img src="wgyc-instagram-logo-gray.png" alt="Instagram"></a>
-        <a href="#"><img src="wgyc-youtube-logo-gray.png" alt="YouTube"></a>
-        <a href="#"><img src="wgyc-x-twitter-gray.png" alt="Twitter"></a>
-        <a href="#"><img src="wgyc-linkedin-logo-gray.png" alt="LinkedIn"></a>
-        <a href="#"><img src="wgyc-facebook-logo-gray.png" alt="Facebook"></a>
+        <a href="#"><img src="assets/images/logos/wgyc-instagram-logo-gray.png" alt="Instagram"></a>
+        <a href="#"><img src="assets/images/logos/wgyc-youtube-logo-gray.png" alt="YouTube"></a>
+        <a href="#"><img src="assets/images/logos/wgyc-x-twitter-gray.png" alt="Twitter"></a>
+        <a href="#"><img src="assets/images/logos/wgyc-linkedin-logo-gray.png" alt="LinkedIn"></a>
+        <a href="#"><img src="assets/images/logos/wgyc-facebook-logo-gray.png" alt="Facebook"></a>
       </div>
       <div>
-        <img src="header_logo_stroke.png" alt="cVent Logo" class="footer-logo">
+        <img src="assets/images/logos/header_logo_stroke.png" alt="cVent Logo" class="footer-logo">
         <p class="footer-text">© 2024 Cvent, Inc.</p>
         <p class="footer-text">Unit 2, 19th Floor, Tower C, Building 14, DLF Cybercity SEZ, Sector 24 & 25 A Gurgaon, 122002</p>
+
+        <!-- Dark Mode Toggle -->
+        <div class="footer-mode-toggle" role="region" aria-label="Theme Preferences">
+          <span class="toggle-label">Theme</span>
+          <label class="toggle-switch" for="darkModeToggle">
+            <input type="checkbox" id="darkModeToggle" aria-label="Toggle between light and dark mode">
+            <span class="toggle-slider"></span>
+            <span class="toggle-moon"></span>
+          </label>
+        </div>
+
         <p class="footer-links">
           <a href="#">Manage Email Preferences</a> or <a href="#">Unsubscribe</a>
         </p>
